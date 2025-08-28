@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.handler = async (event) => {
   try {
     const { message, tone, recipient } = JSON.parse(event.body);
@@ -27,4 +25,5 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: error.toString() };
   }
 };
+
 
