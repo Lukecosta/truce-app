@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Truce - Conflict Resolution Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #6b46c1;
+      --pink: #ec4899;
+      --teal: #14b8a6;
+      --gold: #facc15;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --radius: 0.75rem;
+      --shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    h1, h2 {
+      font-family: 'Playfair Display', serif;
+      margin: 0 0 0.5rem 0;
+    }
+
+    /* Hero Header */
+    .hero {
+      background: white;
+      text-align: center;
+      padding: 6rem 1rem 4rem;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .brand {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 600;
+      letter-spacing: -1px;
+    }
+    .brand span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(-150px);
+      animation: fallBounce 0.8s forwards;
+      animation-fill-mode: forwards;
+    }
+    .brand span:nth-child(1) { color: var(--purple); animation-delay: 0s; }
+    .brand span:nth-child(2) { color: var(--pink); animation-delay: 0.2s; }
+    .brand span:nth-child(3) { color: var(--teal); animation-delay: 0.4s; }
+    .brand span:nth-child(4) { color: var(--gold); animation-delay: 0.6s; }
+    .brand span:nth-child(5) { color: var(--purple); animation-delay: 0.8s; }
+
+    @keyframes fallBounce {
+      0%   { transform: translateY(-150px); opacity: 0; }
+      60%  { transform: translateY(20px); opacity: 1; }
+      80%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0.5rem auto 0;
+    }
+
+    /* Sticky Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    /* Nav Button Styles with Truce Colors */
+    .nav-btn {
+      border: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      color: white;
+      margin: 0 0.25rem;
+    }
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .nav-btn.purple { background: var(--purple); box-shadow: 0 3px 8px rgba(107,70,193,0.4); }
+    .nav-btn.pink   { background: var(--pink);   box-shadow: 0 3px 8px rgba(236,72,153,0.4); }
+    .nav-btn.teal   { background: var(--teal);   box-shadow: 0 3px 8px rgba(20,184,166,0.4); }
+    .nav-btn.gold   { background: var(--gold);   color: #1f2937; box-shadow: 0 3px 8px rgba(250,204,21,0.5); }
+
+    /* Section */
+    section {
+      padding: 4rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+    }
+    section:nth-of-type(1){ background:#fff7fb; }
+    section:nth-of-type(2){ background:#f0faff; }
+    section:nth-of-type(3){ background:#f6fff5; }
+    section:nth-of-type(4){ background:#fffdf2; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .section-header h2 { font-size: 2rem; color: var(--purple); }
+    .section-header p { color: var(--text-light); }
+
+    /* Form */
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .form-textarea { min-height: 120px; resize: vertical; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .btn-primary { background: var(--purple); color: white; box-shadow: 0 4px 10px rgba(107,70,193,0.4); }
+    .btn-secondary { background: var(--pink); color: white; box-shadow: 0 4px 10px rgba(236,72,153,0.4); }
+    .btn-success { background: var(--teal); color: white; box-shadow: 0 4px 10px rgba(20,184,166,0.4); }
+    .btn-invite { background: var(--gold); color: #1f2937; box-shadow: 0 4px 10px rgba(250,204,21,0.5); }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Diary entries */
+    .diary-entry {
+      background: white;
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .diary-timestamp { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem; }
+    .diary-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--purple); }
+
+    /* Preview */
+    #letterPreview {
+      display: none;
+      margin-top: 1.5rem;
+    }
+    .preview-content {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); 
+      align-items: center; 
+      justify-content: center;
+    }
+    .modal-content {
+      background:white; padding:2rem; border-radius:var(--radius); max-width:400px; text-align:center;
+    }
+
+    /* Testimonials */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .testimonial-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      height: 280px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s ease;
+    }
+    .testimonial-card:hover { transform: scale(1.03); }
+    .testimonial-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .testimonial-card:hover .testimonial-overlay { opacity: 1; }
+    .testimonial-overlay .role { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .testimonial-overlay p { font-size: 0.9rem; line-height: 1.4; }
+
+    /* Footer */
+    .footer {
+      background: #f9fafb;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .footer a {
+      color: var(--purple);
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    .footer a:hover { text-decoration: underline; }
+
+    @media(max-width:768px){ nav {flex-wrap: wrap;} }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero" id="top">
+    <h1 class="brand">
+      <span>T</span><span>r</span><span>u</span><span>c</span><span>e</span>
+    </h1>
+    <p class="subtitle">Better words. Stronger relationships.</p>
+  </header>
+
+  <!-- Nav -->
+  <nav>
+    <button class="nav-btn purple" onclick="scrollToSection('compose')">✍️ Compose</button>
+    <button class="nav-btn pink" onclick="scrollToSection('respond')">💬 Respond</button>
+    <button class="nav-btn teal" onclick="scrollToSection('rewrite')">🔄 Rewrite</button>
+    <button class="nav-btn gold" onclick="scrollToSection('diary')">📔 Insights</button>
+    <button class="nav-btn purple" onclick="scrollToSection('invite')">🤝 Invite</button>
+  </nav>
+
+  <!-- Compose -->
+  <section id="compose">
+    <div class="section-header">
+      <h2>Compose Message</h2>
+      <p>Create thoughtful messages that bridge understanding</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Describe your situation</label>
+      <textarea class="form-textarea" id="situation"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="generateMessage()">✨ Generate Message</button>
+    <div id="composeResult"></div>
+  </section>
+
+  <!-- Respond -->
+  <section id="respond">
+    <div class="section-header">
+      <h2>Smart Response</h2>
+      <p>Craft the perfect reply to any message</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message you received</label>
+      <textarea class="form-textarea" id="receivedMessage"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="generateResponse()">🎯 Generate Response</button>
+    <div id="responseResult"></div>
+  </section>
+
+  <!-- Rewrite -->
+  <section id="rewrite">
+    <div class="section-header">
+      <h2>Rewrite Draft</h2>
+      <p>Refine your messages with AI assistance</p>
+    </div>
+    <textarea class="form-textarea" id="originalDraft"></textarea>
+    <button class="btn btn-primary" onclick="rewriteMessage()">🔄 Rewrite Message</button>
+    <div id="rewriteResult"></div>
+  </section>
+
+  <!-- Diary -->
+  <section id="diary">
+    <div class="section-header">
+      <h2>Personal Insights</h2>
+      <p>Save reflections and reuse them for letters, emails, or messages</p>
+    </div>
+    <div class="card">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-input" id="diaryTitle"/>
+      <label class="form-label">What happened?</label>
+      <textarea class="form-textarea" id="diaryEntry"></textarea>
+      <button class="btn btn-success" onclick="addDiaryEntry()">➕ Add Entry</button>
+    </div>
+    <div id="diaryEntries"></div>
+    <div class="card">
+      <h3>Use Insights</h3>
+      <p>Select an insight to auto-draft a letter or email.</p>
+      <div id="insightReuse"></div>
+    </div>
+    <div id="letterPreview" class="card">
+      <h3>Draft Preview</h3>
+      <div class="preview-content" id="previewContent"></div>
+      <button class="btn btn-primary" onclick="copyPreview()">📋 Copy to Clipboard</button>
+    </div>
+  </section>
+
+  <!-- Invite a Friend -->
+  <section id="invite">
+    <div class="section-header">
+      <h2>Share Truce</h2>
+      <p>Conflicts heal faster when both sides use the same tool.</p>
+      <button class="btn btn-invite" onclick="openInvite()">🤝 Invite a Friend</button>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <div class="section-header">
+      <h2>What Our Users Say</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&auto=format&fit=crop&q=60');">
+        <div class="testimonial-overlay">
+          <span class="role">I'm a Dad</span>
+          <p>"Truce helped me find the right words to reconnect with my teenage son without turning every talk into an argument."</p>
+        </div>
+      </div>
+      <div class="testimonial-card" style="background-image:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&auto=format&fit=crop&q=60');">
+        <div class="testimonial-overlay">
+          <span class="role">I'm a Daughter</span>
+          <p>"I use Truce to set healthy boundaries with my step-mum. It gives me courage to speak kindly but firmly."</p>
+        </div>
+      </div>
+      <div class="testimonial-card" style="background-image:url('https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=600&auto=format&fit=crop&q=60');">
+        <div class="testimonial-overlay">
+          <span class="role">I'm a CEO</span>
+          <p>"Even at work, conflicts happen. Truce helps me send professional, clear messages that de-escalate tension quickly."</p>
+        </div>
+      </div>
+      <div class="testimonial-card" style="background-image:url('https://images.unsplash.com/photo-1630939687530-241d630735df?w=600&auto=format&fit=crop&q=60');">
+        <div class="testimonial-overlay">
+          <span class="role">I'm a Friend</span>
+          <p>"Sometimes it’s hard to say sorry. Truce gave me the words to mend a friendship I thought was lost."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Invite Modal -->
+  <div class="modal" id="inviteModal">
+    <div class="modal-content">
+      <h3>Invite a Friend</h3>
+      <p>When you invite someone to Truce, they’ll join you in learning to communicate with wisdom and empathy. Share this link with them and start resolving conflicts together.</p>
+      <button class="btn btn-primary" onclick="closeInvite()">Close</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> ·
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+    </p>
+    <p>Truce version 0.1 beta 2025 · built by Appy Family</p>
+  </footer>
+
+  <script>
+    function scrollToSection(id){
+      document.getElementById(id).scrollIntoView({behavior:"smooth"});
+    }
+
+    function generateMessage(){ 
+      document.getElementById('composeResult').innerHTML="<div class='card'>Generated message draft...</div>"; 
+    }
+    function generateResponse(){ 
+      document.getElementById('responseResult').innerHTML="<div class='card'>Suggested response draft...</div>"; 
+    }
+    function rewriteMessage(){ 
+      document.getElementById('rewriteResult').innerHTML="<div class='card'>Rewritten draft...</div>"; 
+    }
+
+    // Diary
+    let diaryData=JSON.parse(localStorage.getItem('truceDiary')||'[]');
+    function addDiaryEntry(){
+      const title=document.getElementById('diaryTitle').value;
+      const entry=document.getElementById('diaryEntry').value;
+      if(!entry.trim()) return;
+      const obj={title,entry,time:new Date().toLocaleString()};
+      diaryData.push(obj);
+      localStorage.setItem('truceDiary',JSON.stringify(diaryData));
+      displayDiary();
+    }
+    function displayDiary(){
+      const container=document.getElementById('diaryEntries');
+      const reuse=document.getElementById('insightReuse');
+      container.innerHTML=''; reuse.innerHTML='';
+      diaryData.forEach((d,i)=>{
+        container.innerHTML += `<div class="diary-entry">
+          <div class="diary-timestamp">${d.time}</div>
+          <div class="diary-title">${d.title||'Untitled'}</div>
+          <p>${d.entry}</p>
+        </div>`;
+        reuse.innerHTML += `<button class="btn btn-secondary" onclick="useInsight(${i})">${d.title||'Insight '+(i+1)}</button> `;
+      });
+    }
+    function useInsight(i){
+      const d=diaryData[i];
+      const draft=`Dear [Recipient],\n\nI’ve been reflecting on something important:\n"${d.entry}"\n\nI want to share this with you so we can move forward positively.\n\nSincerely,\n[Your Name]`;
+      document.getElementById('previewContent').textContent=draft;
+      document.getElementById('letterPreview').style.display="block";
+      scrollToSection('letterPreview');
+    }
+    function copyPreview(){
+      const content=document.getElementById('previewContent').textContent;
+      navigator.clipboard.writeText(content);
+      alert("Draft copied to clipboard!");
+    }
+    displayDiary();
+
+    // Invite Modal
+    function openInvite(){ document.getElementById('inviteModal').style.display='flex'; }
+    function closeInvite(){ document.getElementById('inviteModal').style.display='none'; }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
